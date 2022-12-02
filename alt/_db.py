@@ -12,7 +12,7 @@ SQL_INDCTR = 'UPDATE {0} SET lsr=%s, oi_15m=%s, oi_1h=%s, oi_4h=%s, oi_1d=%s, oi
 DB_NAME = 'analyser'
 TBL_NAMES = ('binance','okx','bybit')
 DB_USER = 'root'
-DB_PASS = 'vertrigo'
+DB_PASS = ''
 
 
 class DB:
