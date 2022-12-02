@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <title>Analyser - Calculadora</title>
+
+    <style type="text/css">
+        .porcent{
+            width: 30%;
+        }
+    </style>
+  </head>
+  <body class="bg-dark">
+    <!-- Menu -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	  <div class="container-fluid">
+	    <a class="navbar-brand" href="#">Analyser</a>
+	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	      <span class="navbar-toggler-icon"></span>
+	    </button>
+	    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+	        <li class="nav-item">
+	          <a class="nav-link" href="/?exchange=binance" target="_blank">BINANCE</a>
+	        </li>
+	        <li class="nav-item">
+	          <a class="nav-link" href="/?exchange=okx" target="_blank">OKX</a>
+	        </li>
+	        <li class="nav-item">
+	          <a class="nav-link" href="/?exchange=bybit" target="_blank">BYBIT</a>
+	        </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">-</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/calculadora">CALCULADORA</a>
+            </li>
+	      </ul>
+	    </div>
+	  </div>
+	</nav>
+	<hr class="text-light">
+
+    <!-- Body -->
+    <div class="container-fluid text-light d-flex justify-content-center">
+        <div class="border rounded m-0" id="body">
+            <div class="d-flex mb-1">
+                <button class="h3 text-center bg-success py-4 col text-light border" onclick="selectType(this)" id="long" value="1">LONG</button>
+                <button class="h3 text-center bg-danger py-4 col text-dark" onclick="selectType(this)" id="short" value="0">SHORT</button>
+            </div><hr>
+            <div class="d-flex justify-content-between mt-4 px-1">
+                <input type="number" step="0.01" name="" class="form-control" placeholder="Margem" id="margem">
+                &nbsp;&nbsp;
+                <input type="number" step="0.000001" name="" class="form-control" placeholder="P. USDT" id="p_usdt">
+            </div>
+            <div class="mb-4 px-1 mt-2">
+                <center><label id="multiplicador" for="multiplicador" class="h3">100x</label></center>
+                <input type="range" list="opcoesRange" class="" min="0" max="200" value="100" oninput="changeLabel()" onchage="changeLabel()" style="width: 100%; color: #fff;">
+                <datalist id="opcoesRange" style="color: #fff">
+                    <option value="25" label="25x"></option>
+                    <option value="50" label="50x"></option>
+                    <option value="75" label="75x"></option>
+                    <option value="100" label="100x"></option>
+                    <option value="125" label="125x"></option>
+                    <option value="150" label="150x"></option>
+                    <option value="175" label="175x"></option>
+                </datalist>
+            </div><hr>
+            <center>
+            <div class="mb-2 d-flex justify-content-between">
+                <div>
+                    <input type="number" step="0.01" name="" placeholder="TP1%" class="porcent" id="tp1_percent">
+                    <span class="text-bold" id="tp1_result">0</span>
+                </div>
+                <div>
+                    <input type="number" step="0.01" name="" placeholder="SELL%" class="porcent" id="sell1_percent">
+                    <span class="text-bold" id="sell1_result">0</span>
+                </div>
+            </div><hr>
+            <div class="mb-2 d-flex justify-content-between">
+                <div>
+                    <input type="number" step="0.01" name="" placeholder="TP2%" class="porcent" id="tp2_percent">
+                    <span class="text-bold" id="tp2_result">0</span>
+                </div>
+                <div>
+                    <input type="number" step="0.01" name="" placeholder="SELL%" class="porcent" id="sell2_percent">
+                    <span class="text-bold" id="sell2_result">0</span>
+                </div>
+            </div><hr>
+            <div class="mb-2 d-flex justify-content-between">
+                <div>
+                    <input type="number" step="0.01" name="" placeholder="TP3%" class="porcent" id="tp3_percent">
+                    <span class="text-bold" id="tp3_result">0</span>
+                </div>
+                <div>
+                    <input type="number" step="0.01" name="" placeholder="SELL%" class="porcent" id="sell3_percent">
+                    <span class="text-bold" id="sell3_result">0</span>
+                </div>
+            </div><hr>
+            <div class="mb-2 d-flex justify-content-between">
+                <div>
+                    <input type="number" step="0.01" name="" placeholder="TP4%" class="porcent" id="tp4_percent">
+                    <span class="text-bold" id="tp4_result">0</span>
+                </div>
+                <div>
+                    <input type="number" step="0.01" name="" placeholder="SELL%" class="porcent" id="sell4_percent">
+                    <span class="text-bold" id="sell4_result">0</span>
+                </div>
+            </div><hr>
+            <div class="mb-2 d-flex justify-content-between">
+                <div>
+                    <input type="number" step="0.01" name="" placeholder="TP5%" class="porcent" id="tp5_percent">
+                    <span class="text-bold" id="tp5_result">0</span>
+                </div>
+                <div>
+                    <input type="number" step="0.01" name="" placeholder="SELL%" class="porcent" id="sell5_percent">
+                    <span class="text-bold" id="sell5_result">0</span>
+                </div>
+            </div>
+            </center>
+            <hr class="mb-4">
+            <div class="px-4 d-flex justify-content-between">
+                <h4 class="">ROE: <span id="roe">0</span></h4>
+                <h4 class="text-center">LUCRO TOTAL: <span id="lucro_total">0</span></h4>
+            </div><hr class="mb-4">
+            <center>
+            <div class="mb-4 row">
+                <div class="col">
+                    <input type="number" step="0.01" name="" placeholder="STOP%" class="porcent" id="stop_percent">
+                    <span class="text-bold" id="stop_result">0</span>
+                </div>
+                <div class="col">
+                    <span class="h5 text-danger">LOSS:</span>
+                    <span class="text-bold text-danger" id="perda_total">0</span>
+                </div>
+            </div> </center>
+            
+        </div>
+    </div>
+
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+        function selectType(element){
+            _id = $(element).attr('id')
+            if(_id == 'long'){
+                $('#'+_id).attr('class', 'h3 text-center bg-success py-4 col text-light border')
+                $('#short').attr('class', 'h3 text-center bg-danger py-4 col text-dark')
+                ///
+                $('#'+_id).val(1)
+                $('#short').val(0)
+            }else{
+                $('#'+_id).attr('class', 'h3 text-center bg-danger py-4 col text-light border')
+                $('#long').attr('class', 'h3 text-center bg-success py-4 col text-dark')
+                ///
+                $('#'+_id).val(1)
+                $('#long').val(0)
+            }
+            update_calculator()
+        }
+    	function changeLabel(element){
+            $('#multiplicador').html($('input[type="range"]').val() + 'x')
+        }
+        function tp(p_usdt, margem, multiplicador, porcent_tp, porcent_sell, typeCalculator){
+            ///
+            porcent_tp = porcent_tp / 100
+            porcent_sell = porcent_sell / 100
+            ///
+            if(typeCalculator == 'long'){
+                val_tp = parseFloat(parseFloat(p_usdt) + parseFloat((p_usdt*porcent_tp))).toFixed(6)
+            }else{
+                val_tp = parseFloat(parseFloat(p_usdt) - parseFloat((p_usdt*porcent_tp))).toFixed(6)
+            }
+            val_sl = parseFloat(margem*porcent_tp*multiplicador*porcent_sell).toFixed(2)
+            return [val_tp, val_sl]
+        }
+        function stop_total(p_usdt, margem, multiplicador, porcent_loss, typeCalculator){
+            ///
+            porcent_loss = porcent_loss / 100
+            ///
+            if(typeCalculator == 'long'){
+                val_price = parseFloat(parseFloat(p_usdt) - parseFloat((p_usdt * porcent_loss))).toFixed(6)
+            }else{
+                val_price = parseFloat(parseFloat(p_usdt) + parseFloat((p_usdt * porcent_loss))).toFixed(6)
+            }
+            val_stop  = -parseFloat(margem * porcent_loss * multiplicador).toFixed(2)
+            return [val_price, val_stop]
+        }
+        function update_calculator(){
+            margem = $('#margem').val()
+            p_usdt = $('#p_usdt').val()
+            multiplicador = Number($('input[type="range"]').val())
+            porcent_loss = parseFloat($('#stop_percent').val())
+            ///
+            typeCalculator = $('button[value="1"]').attr('id');
+
+            // TP
+            roe = 0;
+            for(i=1; i<=5; i++){
+                if(margem <= 0 || p_usdt <= 0){
+                    break
+                }
+                tp_value = Number($("#tp"+i+"_percent").val());
+                sell_value = Number($("#sell"+i+"_percent").val());
+                result = tp(p_usdt, margem, multiplicador, tp_value, sell_value, typeCalculator);
+                //
+                if(tp_value > 0){
+                    roe = tp_value * multiplicador;
+                    $("#tp"+i+"_result").html('$'+result[0]);
+                }else{
+                    $("#tp"+i+"_result").html('0');
+                }
+                if(sell_value > 0){
+                    $("#sell"+i+"_result").html('$+'+result[1]);
+                }else{
+                    $("#sell"+i+"_result").html('0');
+                }
+            }
+
+            // SELL
+            total_porcentagem = 0;
+            for(i=1; i<=5; i++){
+                value = Number($("#sell"+i+"_percent").val());
+                if(value > 0){
+                    total_porcentagem += value;
+                }
+            }
+            if(total_porcentagem > 100){
+                $(this).val('');
+                aside = $(this).attr('id').split('_')[0]
+                $('#'+aside+'_result').html(0);
+            }
+
+            total_sell = 0;
+            for(i=1; i<=5; i++){
+                value = Number($("#sell"+i+"_result").html().replace('$+',''));
+                if(value > 0){
+                    total_sell += value;
+                }
+            }
+
+            // PNL e LUCRO TOTAL
+            total_sell = parseFloat(total_sell-margem).toFixed(2);
+            if(roe > 0){
+                $('#roe').html(roe+'%');
+            }else{
+                $('#roe').html('0');
+            }
+            if(total_sell > 0){
+                $('#lucro_total').html('$'+total_sell);
+            }else{
+                $('#lucro_total').html('0');
+            }
+
+            // PERDA TOTAL
+            if(porcent_loss >= 0){
+                result = stop_total(p_usdt, margem, multiplicador, porcent_loss, typeCalculator);
+                $('#stop_result').html('$'+result[0]);
+                $('#perda_total').html('$'+result[1]);
+            }else{
+                $('#stop_result').html('$0');
+                $('#perda_total').html('$0');
+            }
+        }
+        // JQUERY
+        $('input').on('keyup input', update_calculator);
+    </script>
+
+  </body>
+</html>

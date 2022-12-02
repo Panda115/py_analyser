@@ -1,0 +1,43 @@
+READ-ME
+
+[instalar o mysql-server]
+apt update
+apt install mysql-server python3-pip -y
+mysql -u root
+ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'vertrigo'; flush privileges; exit;
+service mysql restart
+
+
+#####
+IP: 45.61.55.47
+root: qwkvF4n24UjT
+
+#####
+deixa binance em 3 dias e OKEX em 2 dias
+BYbit do geito que esta a cada 2 dias ele puxa resultado
+
+[eu que escrevi] o lsr e oi demoram bastante para se actualizar e alguns não actualizam(okex e bybit)
+valores duplicados nas colunas(aparece às vezes)
+
+as linhas poucos ajustes e os tempos graficos
+
+######
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <title>Analyser</title>
+
+    <style type="text/css">
+        .table {
+            font-size:12px !important;
+        }
+        .table td{
+            padding: 10px 2px 10px 2px;
+        }
+        .table th{
+            padding: 10px 2px 10px 2px;
+        }
+        tbody span{
+            padding: 2px;
+            margin: 0px;
+        }
+        tbody a{
+            margin: 0px;
+        }
+        .tradingview{
+            width: 4%;
+        }
+        .open-interest{
+            background-color: rgba(18, 10, 143, 0.6);
+        }
+        .long-short-ratio{
+            background-color: rgba(148, 0, 211, 0.6);
+        }
+    </style>
+  </head>
+  <body class="bg-dark">
+    <!-- Menu -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	  <div class="container-fluid">
+	    <a class="navbar-brand" href="#">Analyser</a>
+	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	      <span class="navbar-toggler-icon"></span>
+	    </button>
+	    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+	        <li class="nav-item">
+	          <a class="nav-link" href="?exchange=binance">BINANCE</a>
+	        </li>
+	        <li class="nav-item">
+	          <a class="nav-link" href="?exchange=okx">OKX</a>
+	        </li>
+	        <li class="nav-item">
+	          <a class="nav-link" href="?exchange=bybit">BYBIT</a>
+	        </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">-</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/calculadora" target="_blank">CALCULADORA</a>
+            </li>
+	      </ul>
+	    </div>
+	  </div>
+	</nav>
+	<hr class="text-light">
+
+    <!-- Body -->
+    <div class="container-fluid">
+    	<h1 class="text-light">{{ exchange_name }}</h1>
+    	<div class="row">
+            <div class="col-xl-1">
+                <span class="text-light text-bold col-1">Order by:</span>
+                <select onchange="javascript: filtro = this.value" class="form-control">
+                    <option value="par">MOEDA</option>
+                    <option value="trades">TRADES</option>
+                    <option value="price">PRICE</option>
+                
+                    <option value="price_15m" selected="">PRICE_15M</option>
+                    <option value="lsr_15m">LSR_15M</option>
+                    <option value="oi_15m">OI_15M</option>
+                
+                    <option value="price_1h">PRICE_1H</option>
+                    <option value="lsr_1h">LSR_1H</option>
+                    <option value="oi_1h">OI_1H</option>
+                
+                    <option value="price_4h">PRICE_4H</option>
+                    <option value="lsr_4h">LSR_4H</option>
+                    <option value="oi_4h">OI_4H</option>
+                
+                    <option value="price_1d">PRICE_1D</option>
+                    <option value="lsr_1d">LSR_1D</option>
+                    <option value="oi_1d">OI_1D</option>
+                
+                    <option value="price_2d">PRICE_{{ tf_2d_or_3d }}</option>
+                    <option value="lsr_2d">LSR_{{ tf_2d_or_3d }}</option>
+                    <option value="oi_2d">OI_{{ tf_2d_or_3d }}</option>
+                </select>
+            </div>
+            <div class="col-xl-1">
+                <!-- asc and desc -->
+                <span class="text-light text-bold col-1">Ordem:</span>
+                <select onchange="javascript: ordem = this.value" class="form-control">
+                    <option value="DESC" selected="">Decrescente</option>
+                    <option value="ASC">Crescente</option>
+                </select>
+            </div>
+            <div class="col-xl-1">
+                <span class="text-light text-bold col-1">Par:</span>
+                <input type="text" onkeyup="busca(this)" id="busca" class="form-control" placeholder="BTC">
+            </div>
+        </div><br>
+    	<div class="table-responsive">
+		    <table class="table table-dark table-hover my-1">
+			  <thead>
+			  	<tr>
+			      <th scope="col" colspan="6">#</th>
+			      <th scope="col" colspan="3" class="bg-success">15 Minutos</th>
+			      <th scope="col" colspan="3" class="bg-primary">1 Hora</th>
+			      <th scope="col" colspan="3" style="background-color: #eead2d">4 Horas</th>
+			      <th scope="col" colspan="3" class="bg-secondary">1 Dia</th>
+			      <th scope="col" colspan="3" class="bg-danger">{{ tf_2d_or_3d[0] }} Dias</th>
+			  	</tr>
+			    <tr>
+			      <th scope="col">#</th>
+                  <th scope="col">Moeda</th>
+                  <th scope="col">Price</th>
+                  <th scope="col" style="background-color: rgba(255,255,255, 0.85);color: #000;">L/S</th>
+                  <th scope="col">Trades</th>
+                  <th scope="col" class="tradingview">View</th>
+                  <!-- 15 minutes -->
+                  <th scope="col" class="bg-success">Preço(%)</th>
+                  <th scope="col" style="background-color: rgba(18, 10, 143, 0.6)">O.I</th>
+                  <th scope="col" style="background-color: rgba(148, 0, 211, 0.6)">LSR</th>
+                  <!-- 1 hora -->
+                  <th scope="col" class="bg-primary">Preço(%)</th>
+                  <th scope="col" style="background-color: rgba(18, 10, 143, 0.6)">O.I</th>
+                  <th scope="col" style="background-color: rgba(148, 0, 211, 0.6)">LSR</th>
+                  <!-- 4 horas -->
+                  <th scope="col" style="background-color: #eead2d">Preço(%)</th>
+                  <th scope="col" style="background-color: rgba(18, 10, 143, 0.6)">O.I</th>
+                  <th scope="col" style="background-color: rgba(148, 0, 211, 0.6)">LSR</th>
+                  <!-- 1 dia -->
+                  <th scope="col" class="bg-secondary">Preço(%)</th>
+                  <th scope="col" style="background-color: rgba(18, 10, 143, 0.6)">O.I</th>
+                  <th scope="col" style="background-color: rgba(148, 0, 211, 0.6)">LSR</th>
+                  <!-- 2 dias -->
+                  <th scope="col" class="bg-danger">Preço(%)</th>
+                  <th scope="col" style="background-color: rgba(18, 10, 143, 0.6)">O.I</th>
+                  <th scope="col" style="background-color: rgba(148, 0, 211, 0.6)">LSR</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  </tbody>
+			</table>
+		</div>
+	</div>
+
+
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+    	filtro = 'price_15m';
+        ordem  = 'DESC';
+
+    	function update_table(){
+    		$.ajax({
+    			url: '/api?exchange={{ exchange_name.lower() }}&orderby='+filtro+'&ordem='+ordem,
+    			method: 'GET',
+    			success: function(data){
+    				data = JSON.parse(data);
+    				rows = '';
+    				data['tops'].forEach((line) => {
+                        //line = line.splice(0,1);
+                        if(!isVazioBusca()){
+                            if(!parecidos(line[0])){
+                                return
+                            }
+                        }
+    					rows += '<tr>';
+    					rows += '<td>#</td>';
+    					rows += '<td>'+line[0]+'</td>'; // Par
+                        rows += '<td>$'+line[1]+'</td>'; // Price
+                        rows += '<td><span class="rounded" style="background-color: rgba(255,255,255, 0.6);color: #000;">'+line[2]+'</span></td>'; // L/S
+                        rows += '<td>'+(line[3]).toLocaleString('pt-BR')+'</td>'; // Trades
+                        ///
+                        {% if exchange_name.upper() in ('BINANCE','OKX') %}
+                            link_grafico = line[0].replace('-','') + 'PERP';
+                        {% else %}
+                            link_grafico = line[0];// + 'PERP';
+                        {% endif %}
+                        ///
+                        rows += '<td class="tradingview"><a href="https://www.tradingview.com/chart/?symbol={{exchange_name.upper()}}%3A'+link_grafico+'" target="_blank" class="text-danger text-decoration-none">VER</a></td>';
+                        //////
+                        for(i=4; i <= 18; i++){
+                            if([4,7,10,13,16].indexOf(i) !== -1){
+                                if(line[i] > 0){
+                                    cor = 'success';
+                                }else if(line[i] < 0){
+                                    cor = 'danger';
+                                }else{
+                                    cor = 'dark';
+                                }
+                                line[i] = '<span class="bg-'+cor+' rounded">'+line[i]+'%</span>';
+                            }else{
+                                if([5,8,11,14,17].indexOf(i) !== -1){
+                                    // OPEN INTEREST
+                                    classname = 'open-interest';
+                                }else{
+                                    // LONG SHORT RATIO
+                                    classname = 'long-short-ratio';
+                                }
+                                line[i] = '<span class="rounded '+classname+'">'+line[i]+'%</span>';
+                            }
+                            rows += '<td>'+line[i]+'</td>';
+                        }
+    					rows += '</tr>';
+    				});
+                    count_id = 1;
+                    data['alts'].forEach((line) => {
+                        //line = line.splice(0,1);
+                        if(!isVazioBusca()){
+                            if(!parecidos(line[0])){
+                                return
+                            }
+                        }
+                        rows += '<tr>';
+                        rows += '<td>'+count_id+'</td>';
+                        rows += '<td>'+line[0]+'</td>'; // Par
+                        rows += '<td>$'+line[1]+'</td>'; // Price
+                        rows += '<td><span class="rounded" style="background-color: rgba(255,255,255, 0.6);color: #000;">'+line[2]+'</span></td>'; // L/S
+                        rows += '<td>'+(line[3]).toLocaleString('pt-BR')+'</td>';
+                        ///
+                        {% if exchange_name.upper() in ('BINANCE','OKX') %}
+                            link_grafico = line[0].replace('-','') + 'PERP';
+                        {% else %}
+                            link_grafico = line[0];// + 'PERP';
+                        {% endif %}
+                        ///
+                        rows += '<td><a href="https://www.tradingview.com/chart/?symbol={{exchange_name.upper()}}%3A'+link_grafico+'" target="_blank" class="text-danger text-decoration-none">VER</a></td>';
+                        //////
+                        for(i=4; i <= 18; i++){
+                            if([4,7,10,13,16].indexOf(i) !== -1){
+                                if(line[i] > 0){
+                                    cor = 'success';
+                                }else if(line[i] < 0){
+                                    cor = 'danger';
+                                }else{
+                                    cor = 'dark';
+                                }
+                                line[i] = '<span class="bg-'+cor+' rounded">'+line[i]+'%</span>';
+                            }else{
+                                if([5,8,11,14,17].indexOf(i) !== -1){
+                                    // OPEN INTEREST
+                                    classname = 'open-interest';
+                                }else{
+                                    // LONG SHORT RATIO
+                                    classname = 'long-short-ratio';
+                                }
+                                line[i] = '<span class="rounded '+classname+'">'+line[i]+'%</span>';
+                            }
+                            rows += '<td>'+line[i]+'</td>';
+                        }
+                        rows += '</tr>';
+                        count_id++;
+                    });
+
+    				// update table
+    				$('tbody').html(rows);
+    			}
+    		});
+    	}
+
+    	setInterval(update_table, 5000);
+
+        //
+        function parecidos(par){
+            valor = $('#busca').val().trim();
+            return par.toLowerCase().indexOf(valor.toLowerCase()) !== -1;
+        }
+        function isVazioBusca(){
+            return !$('#busca').val().trim();
+        }
+        function busca(variavel){
+            if(isVazioBusca()){
+                $('tr').each((idx) =>{
+                    tr = $('tr')[idx];
+                    $(tr).show();
+                });
+                return;
+            }
+            $('tbody tr').each((idx) =>{
+                tr = $('tbody tr')[idx];
+                par = tr.childNodes[1].textContent;
+                if(parecidos(par)){
+                    $(tr).show();
+                }else{
+                    $(tr).hide();
+                }
+            });
+        }
+    </script>
+
+  </body>
+</html>
